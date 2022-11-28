@@ -1,6 +1,6 @@
 /* eslint-disable max-len */
 
-const { load } = require("dotenv");
+const { load } = require('dotenv');
 
 /*
   Hook this script to index.html
@@ -12,9 +12,19 @@ const { load } = require("dotenv");
     Under this comment place any utility functions you need - like an inclusive random number selector
     https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/random
 */
-
+function getRandomIntInclusive(min, max) {
+  min = Math.ceil(min);
+  max = Math.floor(max);
+  return Math.floor(Math.random() * (max - min + 1) + min);
+}
 function injectHTML(list) {
   console.log('fired injectHTML');
+  const target = document.querySelector('#restaurant_list');
+  target.innerHTML = '';
+  list.forEach((item) => {
+    const str = '<li>$(item.name) </li>';
+    target.innerHTML += str;
+  });
   /*
   ## JS and HTML Injection
     There are a bunch of methods to inject text or HTML into a document using JS
@@ -33,6 +43,12 @@ function injectHTML(list) {
 
 function processRestaurants(list) {
   console.log('fired restaurants list');
+  const range = [...Array(15).keys()]; // creating an array of 15 elements
+  const newArray = range.map((item) => {
+    const index = getRandomIntInclusive(0, list.length);
+    return list[index];
+  });
+  return newArray;
 
   /*
     ## Process Data Separately From Injecting It
@@ -73,7 +89,7 @@ async function mainEvent() {
     This next line goes to the request for 'GET' in the file at /server/routes/foodServiceRoutes.js
     It's at about line 27 - go have a look and see what we're retrieving and sending back.
    */
-  const results = await fetch('/api/foodServicesPG');
+  const results = await fetch('/api/foodServicePG');
   const arrayFromJson = await results.json(); // here is where we get the data from our request as JSON
 
   /*
@@ -106,7 +122,7 @@ async function mainEvent() {
 
       // This constant will have the value of your 15-restaurant collection when it processes
       const restaurantList = processRestaurants(arrayFromJson.data);
-
+      console.log(restaurantList);
       // And this function call will perform the "side effect" of injecting the HTML list for you
       injectHTML(restaurantList);
 
