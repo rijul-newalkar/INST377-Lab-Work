@@ -1,6 +1,6 @@
 /* eslint-disable max-len */
 
-const { load } = require('dotenv');
+// const { load } = require('dotenv');
 
 /*
   Hook this script to index.html
@@ -22,7 +22,7 @@ function injectHTML(list) {
   const target = document.querySelector('#restaurant_list');
   target.innerHTML = '';
   list.forEach((item) => {
-    const str = '<li>$(item.name) </li>';
+    const str = `<li>${item.name}</li>`;
     target.innerHTML += str;
   });
   /*
